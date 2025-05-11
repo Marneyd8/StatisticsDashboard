@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Dashboard Home";
+}
+
+<div class="container mt-5 text-center">
+    <h1 class="display-4">Statistics Dashboard 📊</h1>
+    <p class="lead">Welcome to your interactive data tracking and visualization hub.</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow rounded">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Items</h5>
+                    <p class="card-text">View, create, and organize your items.</p>
+                    <a class="btn btn-primary" asp-controller="Items" asp-action="Index">Go to Items</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow rounded">
+                <div class="card-body">
+                    <h5 class="card-title">View Statistics</h5>
+                    <p class="card-text">Visualize item data through charts and analytics.</p>
+                    <a class="btn btn-success" asp-controller="Dashboard" asp-action="Index">Go to Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow rounded">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Clients</h5>
+                    <p class="card-text">Take care of your clients.</p>
+                    <a class="btn btn-info" asp-controller="Clients" asp-action="Index">Go to Clients</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow rounded">
+                <div class="card-body">
+                    <h5 class="card-title">Add New Category</h5>
+                    <p class="card-text">Create new categories for better organization.</p>
+                    <a class="btn btn-secondary" asp-controller="Categories" asp-action="Create">Add Category</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

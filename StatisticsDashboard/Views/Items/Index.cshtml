@@ -1,0 +1,46 @@
+﻿@model List<StatisticsDashboard.Models.Item>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Index</h3>
+
+<div class="mb-3">
+    <a asp-controller="Items" asp-action="Create" class="btn btn-primary">Add New Item</a>
+    <a asp-controller="Categories" asp-action="Create" class="btn btn-secondary">Add New Category</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Clients</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("N2") $</td>
+                <td>@item.Category?.Name</td>
+                <td>
+                    @foreach (var client in item.ItemClients)
+                    {
+                        @client.Client.Name
+                        @if (client != item.ItemClients.Last())
+                        {
+                            @: ,
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

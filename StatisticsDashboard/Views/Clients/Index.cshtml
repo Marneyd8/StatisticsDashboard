@@ -1,0 +1,31 @@
+﻿@model List<StatisticsDashboard.Models.Client>
+@{
+    ViewData["Title"] = "Client Management";
+}
+
+<h2>Client Management</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add New Client</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Items Owned</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var client in Model)
+        {
+            <tr>
+                <td>@client.Name</td>
+                <td>@client.ItemClients?.Count</td>
+                <td>
+                    <a asp-action="Profile" asp-route-id="@client.Id" class="btn btn-sm btn-info">Profile</a>
+                    <a asp-action="Delete" asp-route-id="@client.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Assign Item to Client";
+}
+
+<h2>Assign Existing Item</h2>
+
+<form asp-action="AssignItem" method="post">
+    <input type="hidden" name="clientId" value="@ViewBag.ClientId" />
+
+    <div class="form-group">
+        <label for="itemId">Select Item</label>
+        <select class="form-control" name="itemId">
+            @foreach (var item in ViewBag.Items)
+            {
+                <option value="@item.Id">@item.Name - @item.Price.ToString("N2")$</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Assign</button>
+</form>

@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Item Statistics</h2>
+
+<label for="chartType">Select Chart Type:</label>
+<select id="chartType">
+    <option value="pie" selected>Pie</option>
+    <option value="bar">Bar</option>
+    <option value="doughnut">Doughnut</option>
+</select>
+
+<h3 style="margin-top: 30px;">Total Value of Items by Category</h3>
+<canvas id="itemValueChart" style="max-height: 400px; width: 100%; margin-top: 20px;"></canvas>
+
+<h3 style="margin-top: 50px;">Number of Items by Category</h3>
+<canvas id="itemCountChart" style="max-height: 400px; width: 100%; margin-top: 40px;"></canvas>
+
+<h3 class="text-center mb-5" style="margin-top: 100px;">Client Item Statistics</h3>
+<h4>Number of Items by Client</h4>
+<canvas id="clientItemCountChart" style="max-height: 400px; width: 100%; margin-top: 20px;"></canvas>
+
+<h4>Total Value of Items by Client</h4>
+<canvas id="clientValueChart" style="max-height: 400px; width: 100%; margin-top: 20px;"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+    let valueChart;
+    let countChart;
+    let clientCountChart;
+    let clientValueChart;
+    const ctxValue = document.getElementById("itemValueChart").getContext("2d");
+    const ctxCount = document.getElementById("itemCountChart").getContext("2d");
+    const ctxClientCount = document.getElementById("clientItemCountChart").getContext("2d");
+    const ctxClientValue = document.getElementById("clientValueChart").getContext("2d");
+
+    async function renderCharts(chartType = "pie") {
+        const res = await fetch("/Dashboard/GetItemStats");
+        const data = await res.json();
+
+        const labels = data.map(d => d.category);
+        const values = data.map(d => d.totalValue);
+        const counts = data.map(d => d.count);
+
+        if (valueChart) valueChart.destroy();
+        if (countChart) countChart.destroy();
+
+        const sharedOptions = {
+            responsive: true,
+            plugins: {
+                legend: { position: "bottom" },
+                datalabels: {
+                    color: "#fff",
+                    font: { weight: 'bold' },
+                    formatter: (value, context) => {
+                        const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return `${percentage}% (${value})`;
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const value = context.raw;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${context.label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        };
+
+        valueChart = new Chart(ctxValue, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Total Value by Category",
+                    data: values,
+                    backgroundColor: ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2"]
+                }]
+            },
+            options: sharedOptions,
+            plugins: [ChartDataLabels]
+        });
+
+        countChart = new Chart(ctxCount, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Item Count by Category",
+                    data: counts,
+                    backgroundColor: ["#af7aa1", "#edc949", "#59a14f", "#bab0ab"]
+                }]
+            },
+            options: sharedOptions,
+            plugins: [ChartDataLabels]
+        });
+
+        const clientStatsRes = await fetch("/api/statistics/client-stats");
+        const clientStatsData = await clientStatsRes.json();
+
+        const clientLabels = clientStatsData.map(x => x.clientName);
+        const clientItemCounts = clientStatsData.map(x => x.itemCount);
+        const clientTotalValues = clientStatsData.map(x => x.totalValue);
+
+        if (clientCountChart) clientCountChart.destroy();
+        if (clientValueChart) clientValueChart.destroy();
+
+        clientCountChart = new Chart(ctxClientCount, {
+            type: chartType,
+            data: {
+                labels: clientLabels,
+                datasets: [{
+                    label: "Item Count by Client",
+                    data: clientItemCounts,
+                    backgroundColor: ["#59a14f", "#bab0ab", "#f28e2b", "#76b7b2"]
+                }]
+            },
+            options: sharedOptions,
+            plugins: [ChartDataLabels]
+        });
+
+        clientValueChart = new Chart(ctxClientValue, {
+            type: chartType,
+            data: {
+                labels: clientLabels,
+                datasets: [{
+                    label: "Total Value by Client",
+                    data: clientTotalValues,
+                    backgroundColor: ["#af7aa1", "#edc949", "#59a14f", "#bab0ab"]
+                }]
+            },
+            options: sharedOptions,
+            plugins: [ChartDataLabels]
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderCharts();
+        document.getElementById("chartType").addEventListener("change", function () {
+            renderCharts(this.value);
+        });
+    });
+</script>

@@ -1,0 +1,41 @@
+﻿@model StatisticsDashboard.Models.Client
+@{
+    ViewData["Title"] = "Client Profile";
+}
+
+<h2>Client: @Model.Name</h2>
+
+<p>Total Items: @Model.ItemClients?.Count()</p>
+<p>Total Value: @Model.ItemClients?.Sum(ic => ic.Item.Price).ToString("N2") $</p>
+
+<a asp-controller="Clients" asp-action="AssignItem" asp-route-id="@Model.Id" class="btn btn-secondary mb-3">
+    Assign Existing Item
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ic in Model.ItemClients)
+        {
+            <tr>
+                <td>@ic.Item.Name</td>
+                <td>@ic.Item.Price.ToString("N2") $</td>
+                <td>@ic.Item.Category?.Name</td>
+                <td>
+                    <form asp-action="RemoveAssignedItem" method="post" style="display:inline;">
+                        <input type="hidden" name="clientId" value="@Model.Id" />
+                        <input type="hidden" name="itemId" value="@ic.Item.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
