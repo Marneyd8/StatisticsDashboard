@@ -30,6 +30,7 @@
                 <td>@ic.Item.Category?.Name</td>
                 <td>
                     <form asp-action="RemoveAssignedItem" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" name="clientId" value="@Model.Id" />
                         <input type="hidden" name="itemId" value="@ic.Item.Id" />
                         <button type="submit" class="btn btn-danger btn-sm">Remove</button>

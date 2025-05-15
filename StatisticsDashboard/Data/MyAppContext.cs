@@ -5,10 +5,14 @@ namespace StatisticsDashboard.Data
 {
     public class MyAppContext : DbContext
     {
+        // defines the database context (entity relationships, seeds initial data)
+        // var _context is used as a dependency injection in controllers and services to interact with the database
+        // _context is injected in contructor
         public MyAppContext(DbContextOptions<MyAppContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // seeding
             modelBuilder.Entity<ItemClient>().HasKey(ic => new
             {
                 ic.ItemId,
@@ -29,6 +33,7 @@ namespace StatisticsDashboard.Data
 
             base.OnModelCreating(modelBuilder);
         }
+        // relationships (from Models)
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Client> Clients { get; set; }

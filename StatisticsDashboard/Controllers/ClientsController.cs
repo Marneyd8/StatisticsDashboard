@@ -22,6 +22,8 @@ namespace StatisticsDashboard.Controllers
             return View(clients);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var client = await _context.Clients.FindAsync(id);
@@ -40,8 +42,10 @@ namespace StatisticsDashboard.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] Client client)
         {
+            // Bind is only optional, it specifies what atributes to bind with Post request
             if (ModelState.IsValid)
             {
                 _context.Clients.Add(client);
@@ -76,6 +80,7 @@ namespace StatisticsDashboard.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignItem(int clientId, int itemId)
         {
             bool exists = await _context.ItemClients
@@ -90,6 +95,7 @@ namespace StatisticsDashboard.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveAssignedItem(int clientId, int itemId)
         {
             var client = await _context.Clients

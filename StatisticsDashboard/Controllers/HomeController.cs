@@ -13,12 +13,8 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    // View() -> takes us to View same as the name of the Function (Index)
     public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
     {
         return View();
     }

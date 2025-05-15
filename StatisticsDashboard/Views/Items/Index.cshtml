@@ -8,6 +8,7 @@
 <div class="mb-3">
     <a asp-controller="Items" asp-action="Create" class="btn btn-primary">Add New Item</a>
     <a asp-controller="Categories" asp-action="Create" class="btn btn-secondary">Add New Category</a>
+    <a asp-controller="Categories" asp-action="Delete" class="btn btn-danger">Delete Category</a>
 </div>
 
 <table class="table">
@@ -37,8 +38,8 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }

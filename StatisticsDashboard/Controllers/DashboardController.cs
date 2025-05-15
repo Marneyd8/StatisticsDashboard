@@ -39,8 +39,9 @@ namespace StatisticsDashboard.Controllers
         [HttpGet("api/statistics/client-stats")]
         public async Task<IActionResult> GetClientStats()
         {
+            // HTTPGET can specify the different path to API
             var stats = await _context.Clients
-                .Select(c => new ClientStatisticsDto
+                .Select(c => new ClientStatisticsViewModel
                 {
                     ClientName = c.Name,
                     ItemCount = c.ItemClients.Count,

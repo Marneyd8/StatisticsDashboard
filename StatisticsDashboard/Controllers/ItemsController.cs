@@ -23,48 +23,14 @@ namespace StatisticsDashboard.Controllers
             return View(item);
         }
 
-        public async Task<IActionResult> CreateForClient(int clientId)
-        {
-            var client = await _context.Clients.FindAsync(clientId);
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.ClientId = clientId;
-            ViewBag.Categories = _context.Categories.ToList();
-            return View("CreateForClient");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateForClient(Item item, int clientId)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Items.Add(item);
-                await _context.SaveChangesAsync();
-                var itemClient = new ItemClient
-                {
-                    ItemId = item.Id,
-                    ClientId = clientId
-                };
-                _context.Add(itemClient);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Profile", "Clients", new { id = clientId });
-            }
-
-            ViewBag.ClientId = clientId;
-            ViewBag.Categories = _context.Categories.ToList();
-            return View(item);
-        }
-
         public IActionResult Create()
         {
             ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, Name, Price, CategoryId")] Item item)
         {
             if (ModelState.IsValid)
@@ -84,6 +50,7 @@ namespace StatisticsDashboard.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id, Name, Price, CategoryId")] Item item)
         {
             if (ModelState.IsValid)
@@ -102,8 +69,10 @@ namespace StatisticsDashboard.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // ActionName is when your method name dont match the action name you want to use in the route
             var item = await _context.Items.FindAsync(id);
             if (item != null)
             {

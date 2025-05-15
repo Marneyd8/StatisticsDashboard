@@ -5,6 +5,7 @@
 <h2>Assign Existing Item</h2>
 
 <form asp-action="AssignItem" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" name="clientId" value="@ViewBag.ClientId" />
 
     <div class="form-group">
